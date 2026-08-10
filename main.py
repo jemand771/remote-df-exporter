@@ -45,6 +45,7 @@ class DFCollector(Collector):
         yield gauge_available
     
     def connect_ssh(self):
+        self.ssh_client.close()
         self.hostname = os.environ["HOSTNAME"]
         self.port = int(os.environ["PORT"])
         self.username = os.environ["USERNAME"]
@@ -67,8 +68,8 @@ class DFCollector(Collector):
         if not transport.is_active():
             return False
         try:
-            transport.send_ignore()
-        except EOFError:
+            transport.open_session(timeout=5).close()
+        except paramiko.SSHException, EOFError:
             return False
         return True
 

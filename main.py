@@ -69,7 +69,7 @@ class DFCollector(Collector):
             return False
         try:
             transport.open_session(timeout=5).close()
-        except paramiko.SSHException, EOFError:
+        except (paramiko.SSHException, EOFError):
             return False
         return True
 
